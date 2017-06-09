@@ -1,7 +1,29 @@
 var Trade = require("../models/trade"),
-    Comment = require("../models/comment");
+    Comment = require("../models/comment"),
+    Profile = require("../models/profile")
 
 var middlewareObj={};
+
+middlewareObj.checkProfileOwnership = function(req,res,next){   
+    if(req.isAuthenticated()){
+        Profile.findById(req.params.id, function(err,foundProfile){
+            if (err){
+                req.flash("error","Request not found!")
+                res.redirect("back")
+            } else {
+                if (foundProfile.author.id.equals(req.user._id)){
+                    next();
+                } else {
+                    req.flash("error","You don't have permission to do that!")
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        req.flash("error", "You need to be logged in to do that")
+        res.redirect("back");
+    }
+}
 
 middlewareObj.checkTradeOwnership = function(req,res,next){   
     if(req.isAuthenticated()){

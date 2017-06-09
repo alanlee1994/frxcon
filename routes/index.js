@@ -60,35 +60,33 @@ router.post("/profiles/:id", function(req,res){
         country = req.body.country,
         address = req.body.address,
         currency = req.body.currency,
-        user= {
+        author={
         id: req.user._id,
         username: req.user.username
     };
     var newProfile={name: name, contact:contact, dob: dob, 
     occupation: occupation, image: image, country:country, address:address, 
-    currency: currency ,user: user };
+    currency: currency ,author: author };
     Profile.create(newProfile,function(err,newlycreated){
         if (err){
             console.log(err);
         } else{
-            res.redirect("/profiles/"+newProfile.user.id)    
+            res.redirect("/profiles/"+newProfile.author.id)    
         }
     });
 });
 
 router.get("/profiles/:id",function(req,res){
-    Profile.findById(req.params.id, function(err, foundProfile){
+    Profile.find({username :req.params.username}, function(err, foundProfile){
         if (err){
-            console.log(err);
+            req.flash("error","Request not found!")
+            res.redirect("back")
         } else {
-            console.log(req.params.id)
-            console.log(foundProfile);
+            console.log(foundProfile)
             res.render("profiles/show", {profile:foundProfile});
         }
     });
 });
-//keep returning null.
 //Edit Profile======================================================================================
-
 
 module.exports=router;

@@ -9,21 +9,23 @@ var profileSchema = new mongoose.Schema({
     country: String,
     address: String,
     currency: String,
-    author: {
-        id:{
-            type:mongoose.Schema.Types.ObjectId,
+    author:{
+        id:{ 
+            type: mongoose.Schema.Types.ObjectId,
             ref:"User"
         },
-        username:String
+        username: String
     },
     comments:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Comment"
-    }]
-});
+    }],
     trades:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Trade"
-    }]
+    }],
+
+});
+    
 
 module.exports = mongoose.model("profile",profileSchema);
